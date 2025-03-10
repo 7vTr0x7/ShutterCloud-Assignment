@@ -60,7 +60,6 @@ const formSchema = z.object({
 type FormData = z.infer<typeof formSchema>;
 
 export default function AmenitiesForm() {
-  const [isAmenitySelected, setIsAmenitySelected] = useState<boolean>(false);
   const [amenities, setAmenities] = useState<Amenity[]>(amenitiesData);
   const [images, setImages] = useState<IImage[]>([]);
   const [urls, setUrls] = useState<string[]>([]);
