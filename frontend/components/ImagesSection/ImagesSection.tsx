@@ -1,11 +1,13 @@
 import { IImage } from "@/app/types/image";
-import { useState } from "react";
 import { LuHousePlus } from "react-icons/lu";
 import ImageCard from "./ImageCard";
 
-const ImagesSection = () => {
-  const [images, setImages] = useState<IImage[]>([]);
+type ImagesSectionProps = {
+  images: IImage[];
+  setImages: React.Dispatch<React.SetStateAction<IImage[]>>;
+};
 
+const ImagesSection = ({ images, setImages }: ImagesSectionProps) => {
   const handleFiles = (files: FileList | null) => {
     if (!files) return;
 
@@ -66,7 +68,7 @@ const ImagesSection = () => {
           </div>
         </>
       )}
-      <p className="text-[#df4469] text-sm my-3">Add atleast one media</p>
+      <p className="text-[#df4469] text-sm my-3">Add at least one media</p>
     </div>
   );
 };

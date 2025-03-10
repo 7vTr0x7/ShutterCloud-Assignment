@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { CiCirclePlus } from "react-icons/ci";
 import { z } from "zod";
 
@@ -21,9 +21,18 @@ const urlTypes = [
   { title: "GitHub URL", placeholder: "https://github.com/example" },
 ];
 
-const UrlInput = () => {
-  const [urls, setUrls] = useState<string[]>([]);
+type UrlInputProps = {
+  urls: string[];
+  setUrls: React.Dispatch<React.SetStateAction<string[]>>;
+};
+
+const UrlInput = ({ urls, setUrls }: UrlInputProps) => {
   const [errors, setErrors] = useState<(string | null)[]>([]);
+
+  // Initialize empty error array that matches urls length
+  useEffect(() => {
+    setErrors(new Array(urls.length).fill(null));
+  }, []);
 
   const handleInputChange = (index: number, value: string) => {
     const newUrls = [...urls];
@@ -58,7 +67,7 @@ const UrlInput = () => {
       {urls.map((url, index) => (
         <div key={index} className="flex flex-col">
           <label className="text-sm font-semibold">
-            {urlTypes[index].title}
+            {urlTypes[index]?.title || `URL ${index + 1}`}
           </label>
           <input
             type="text"
@@ -67,7 +76,7 @@ const UrlInput = () => {
             className={`mt-1 p-2 border w-full rounded-md ${
               errors[index] ? "border-red-500" : "border-gray-300"
             }`}
-            placeholder={urlTypes[index].placeholder}
+            placeholder={urlTypes[index]?.placeholder || "Enter URL"}
           />
           {errors[index] && (
             <span className="text-sm text-red-500 mt-1">{errors[index]}</span>
@@ -78,7 +87,7 @@ const UrlInput = () => {
         <button
           onClick={addNewUrlField}
           disabled={urls.length === MAX_INPUTS}
-          className="flex items-center px-3 py-1border border-gray-400 rounded-md mt-2 cursor-pointer">
+          className="flex items-center px-3 py-1 border border-gray-400 rounded-md mt-2 cursor-pointer">
           <CiCirclePlus className="w-5 h-5 mr-2" />
           Add another URL
         </button>

@@ -1,18 +1,24 @@
 import amenitiesData from "@/app/constants/amenities";
 import { Amenity } from "@/app/types/amenity";
-import { CiCirclePlus } from "react-icons/ci";
+import { CiCirclePlus, CiCircleMinus } from "react-icons/ci";
 import { GoCircle } from "react-icons/go";
-
-import { Dispatch, SetStateAction, useState, useEffect } from "react";
 import { FaCircleCheck } from "react-icons/fa6";
-import { CiCircleMinus } from "react-icons/ci";
+import { Dispatch, SetStateAction, useState, useEffect } from "react";
 
 type AmenitiesProps = {
   setIsAmenitySelected: Dispatch<SetStateAction<boolean>>;
+  amenities: Amenity[];
+  setAmenities: Dispatch<SetStateAction<Amenity[]>>;
 };
 
-export default function Amenities({ setIsAmenitySelected }: AmenitiesProps) {
-  const [amenities, setAmenities] = useState<Amenity[]>(amenitiesData);
+export default function Amenities({
+  setIsAmenitySelected,
+  amenities,
+  setAmenities,
+}: AmenitiesProps) {
+  useEffect(() => {
+    setIsAmenitySelected(amenities.some((amenity) => amenity.selected));
+  }, [amenities, setIsAmenitySelected]);
 
   const handleToggleSelection = (id: number) => {
     setAmenities((prevAmenities) =>
@@ -25,20 +31,11 @@ export default function Amenities({ setIsAmenitySelected }: AmenitiesProps) {
   };
 
   const handleSelectAllAmenity = () => {
-    setAmenities((prevAmenities) => {
-      const allSelected = prevAmenities.every((amenity) => amenity.selected);
-
-      const updatedAmenities = prevAmenities.map((amenity) => ({
-        ...amenity,
-        selected: !allSelected,
-      }));
-      return updatedAmenities;
-    });
+    const allSelected = amenities.every((amenity) => amenity.selected);
+    setAmenities(
+      amenities.map((amenity) => ({ ...amenity, selected: !allSelected }))
+    );
   };
-
-  useEffect(() => {
-    setIsAmenitySelected(amenities.some((amenity) => amenity.selected));
-  }, [amenities]);
 
   return (
     <>
@@ -48,21 +45,22 @@ export default function Amenities({ setIsAmenitySelected }: AmenitiesProps) {
           className="flex items-center gap-2 px-2 py-1 text-black border border-green-300 rounded-md"
           onClick={handleSelectAllAmenity}>
           <span className="text-xl">
-            {amenities?.every((amenity) => amenity.selected) ? (
+            {amenities.every((amenity) => amenity.selected) ? (
               <CiCircleMinus />
             ) : (
               <CiCirclePlus />
             )}
           </span>
           <span className="text-sm font-medium cursor-pointer">
-            {amenities?.every((amenity) => amenity.selected)
+            {amenities.every((amenity) => amenity.selected)
               ? "Unselect all"
               : "Select all"}
           </span>
         </button>
       </div>
+
       <div className="grid grid-cols-3 gap-3 py-3">
-        {amenities?.map((amenity: Amenity) => (
+        {amenities.map((amenity) => (
           <div
             key={amenity.id}
             className="col-span-1 flex gap-1 mb-3 items-center cursor-pointer"
