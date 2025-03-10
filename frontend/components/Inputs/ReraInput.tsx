@@ -109,12 +109,7 @@ const ReraInput = ({
                   : "border-gray-400"
               }`}
             />
-            <span
-              className={`${
-                isRegistered === false ? "text-red-500 font-semibold" : ""
-              }`}>
-              No
-            </span>
+            <span>No</span>
           </label>
         </div>
       </div>

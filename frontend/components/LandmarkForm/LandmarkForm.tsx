@@ -5,23 +5,20 @@ import dynamic from "next/dynamic";
 import "leaflet/dist/leaflet.css";
 import { IoClose } from "react-icons/io5";
 import { SlLocationPin } from "react-icons/sl";
+import { MapContainer, TileLayer, Marker, useMapEvents } from "react-leaflet";
 import { LatLngExpression } from "leaflet";
 
-// Dynamically import Leaflet components (Fixes SSR issue)
-const MapContainer = dynamic(
+// Dynamically import Leaflet components to prevent SSR errors
+const MapContainerDynamic = dynamic(
   () => import("react-leaflet").then((mod) => mod.MapContainer),
   { ssr: false }
 );
-const TileLayer = dynamic(
+const TileLayerDynamic = dynamic(
   () => import("react-leaflet").then((mod) => mod.TileLayer),
   { ssr: false }
 );
-const Marker = dynamic(
+const MarkerDynamic = dynamic(
   () => import("react-leaflet").then((mod) => mod.Marker),
-  { ssr: false }
-);
-const useMapEvents = dynamic(
-  () => import("react-leaflet").then((mod) => mod.useMapEvents),
   { ssr: false }
 );
 
@@ -51,7 +48,7 @@ type LocationMarkerProps = {
 };
 
 const LocationMarker: React.FC<LocationMarkerProps> = ({ setLocation }) => {
-  const map = useMapEvents({
+  useMapEvents({
     click: (e) => setLocation(e.latlng.lat, e.latlng.lng),
   });
   return null;
@@ -88,7 +85,6 @@ const LandmarkForm: React.FC<LandmarkFormProps> = ({
   return (
     <div className="my-8 border border-gray-200 bg-white p-6 rounded shadow-md">
       <div className="space-y-4">
-        {/* Landmark & Distance Inputs */}
         <div className="grid grid-cols-2 gap-4">
           <div>
             <label className="block text-sm font-medium mb-1">Landmark</label>
@@ -118,7 +114,6 @@ const LandmarkForm: React.FC<LandmarkFormProps> = ({
           </div>
         </div>
 
-        {/* Description Input */}
         <div>
           <label className="block text-sm font-medium mb-1">Description</label>
           <textarea
@@ -129,7 +124,6 @@ const LandmarkForm: React.FC<LandmarkFormProps> = ({
           />
         </div>
 
-        {/* Latitude & Longitude */}
         <div className="grid grid-cols-2 gap-4 items-center">
           <div>
             <label className="block text-sm font-medium mb-1">Latitude</label>
@@ -164,7 +158,6 @@ const LandmarkForm: React.FC<LandmarkFormProps> = ({
         </div>
       </div>
 
-      {/* Map Popup */}
       {showMap && (
         <div className="fixed inset-0 bg-black bg-opacity-10 flex items-center justify-center z-50">
           <div className="bg-white p-4 rounded shadow-lg w-full max-w-md relative">
@@ -176,20 +169,20 @@ const LandmarkForm: React.FC<LandmarkFormProps> = ({
                 <IoClose size={20} />
               </button>
             </div>
-            <MapContainer
+            <MapContainerDynamic
               center={
                 [formData.latitude, formData.longitude] as LatLngExpression
               }
               zoom={13}
               className="h-72 w-full mb-3 rounded">
-              <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-              <Marker
+              <TileLayerDynamic url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+              <MarkerDynamic
                 position={
                   [formData.latitude, formData.longitude] as LatLngExpression
                 }
               />
               <LocationMarker setLocation={setLocation} />
-            </MapContainer>
+            </MapContainerDynamic>
             <button
               type="button"
               onClick={toggleMapPopup}

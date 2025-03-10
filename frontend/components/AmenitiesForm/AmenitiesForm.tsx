@@ -10,12 +10,12 @@ import amenitiesData from "@/app/constants/amenities";
 import Amenities from "./Amenities";
 import ImagesSection from "../ImagesSection/ImagesSection";
 import UrlInput from "../Inputs/UrlInput";
-import ReraInput from "../ReraInput";
 import LandmarkForm from "../LandmarkForm/LandmarkForm";
 
 import { IImage } from "@/app/types/image";
 import { Amenity } from "@/app/types/amenity";
 import ProgressBar from "../ProgressBar/ProgressBar";
+import ReraInput from "../Inputs/ReraInput";
 
 const formSchema = z.object({
   amenities: z
