@@ -10,7 +10,7 @@ import amenitiesData from "@/app/constants/amenities";
 import Amenities from "./Amenities";
 import ImagesSection from "../ImagesSection/ImagesSection";
 import UrlInput from "../Inputs/UrlInput";
-import ReraInput from "../Inputs/ReraInput";
+import ReraInput from "../ReraInput";
 import LandmarkForm from "../LandmarkForm/LandmarkForm";
 
 import { IImage } from "@/app/types/image";
@@ -42,38 +42,13 @@ const formSchema = z.object({
     .refine((images) => images.some((img) => img.isPrimary), {
       message: "At least one image must be set as primary",
     }),
-  urls: z
-    .array(
-      z
-        .string()
-        .regex(
-          /^(https?:\/\/)?(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/|linkedin\.com\/in\/|github\.com\/)/,
-          "Invalid URL format"
-        )
-    )
-    .optional(),
-  rera: z
-    .object({
-      isRegistered: z.boolean().nullable(),
-      numbers: z
-        .array(
-          z
-            .string()
-            .regex(
-              /^[A-Za-z0-9]+$/,
-              "RERA Number must contain only alphanumeric characters"
-            )
-        )
-        .optional(),
-    })
-    .refine(
-      (data) =>
-        data.isRegistered === false ||
-        (data.isRegistered && data.numbers?.length),
-      {
-        message: "If RERA is registered, at least one RERA number is required",
-      }
+  urls: z.array(z.string().url("Invalid URL format")).optional(),
+  rera: z.object({
+    isRegistered: z.boolean().nullable(),
+    numbers: z.array(
+      z.string().regex(/^[A-Za-z0-9]+$/, "RERA Number must be alphanumeric")
     ),
+  }),
   landmark: z.object({
     landmarkId: z.number(),
     distance: z.string().min(1, "Distance is required"),
@@ -95,7 +70,7 @@ export default function AmenitiesForm() {
     numbers: string[];
   }>({
     isRegistered: null,
-    numbers: [""],
+    numbers: [],
   });
   const [landmark, setLandmark] = useState({
     landmarkId: 1,
@@ -112,9 +87,21 @@ export default function AmenitiesForm() {
       try {
         const parsedData: FormData = JSON.parse(savedData);
         setAmenities(parsedData.amenities || []);
-        setImages(parsedData.images || []);
+
+        // Ensure `file` property exists for IImage[]
+        setImages(
+          (parsedData.images || []).map((image) => ({
+            ...image,
+            file: new File([], ""), // Placeholder empty File object
+          }))
+        );
+
         setUrls(parsedData.urls || []);
-        setRera(parsedData.rera || { isRegistered: null, numbers: [""] });
+        setRera({
+          isRegistered: parsedData.rera.isRegistered ?? null,
+          numbers: parsedData.rera.numbers ?? [],
+        });
+
         setLandmark(
           parsedData.landmark || {
             landmarkId: 1,
@@ -131,7 +118,7 @@ export default function AmenitiesForm() {
   }, []);
 
   const calculateProgress = () => {
-    let totalFields = 5;
+    const totalFields = 5;
     let completedFields = 0;
 
     if (amenities.some((amenity) => amenity.selected)) completedFields++;
@@ -148,7 +135,12 @@ export default function AmenitiesForm() {
     try {
       const formData: FormData = {
         amenities,
-        images,
+        images: images.map((img) => ({
+          id: img.id,
+          url: img.url,
+          description: img.description,
+          isPrimary: img.isPrimary,
+        })),
         urls,
         rera: {
           isRegistered: rera.isRegistered,
@@ -163,9 +155,9 @@ export default function AmenitiesForm() {
         },
       };
 
-      console.log("Submitting form data:", formData); // Debugging
-
+      console.log("Submitting form data:", formData);
       formSchema.parse(formData);
+
       localStorage.setItem("amenitiesFormData", JSON.stringify(formData));
       toast.success("Form data saved successfully!");
       setErrors({});
@@ -221,9 +213,13 @@ export default function AmenitiesForm() {
 
         <ReraInput
           isRegistered={rera.isRegistered}
-          setIsRegistered={(val) => setRera({ ...rera, isRegistered: val })}
+          setIsRegistered={(val) =>
+            setRera((prev) => ({ ...prev, isRegistered: val }))
+          }
           reraNumbers={rera.numbers}
-          setReraNumbers={(val) => setRera({ ...rera, numbers: val })}
+          setReraNumbers={(val) =>
+            setRera((prev) => ({ ...prev, numbers: val }))
+          }
         />
         {errors["rera"] && (
           <p className="text-red-500 text-sm mt-1">{errors["rera"]}</p>
@@ -237,7 +233,7 @@ export default function AmenitiesForm() {
         <div className="flex items-center justify-between">
           <button className="px-4 py-2 bg-[#df4469] text-white rounded-lg mt-5">
             Preview
-          </button>{" "}
+          </button>
           <button
             className="px-4 py-2 bg-[#df4469] text-white rounded-lg mt-5"
             onClick={validateAndSubmit}>

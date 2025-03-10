@@ -29,10 +29,9 @@ type UrlInputProps = {
 const UrlInput = ({ urls, setUrls }: UrlInputProps) => {
   const [errors, setErrors] = useState<(string | null)[]>([]);
 
-  // Initialize empty error array that matches urls length
   useEffect(() => {
     setErrors(new Array(urls.length).fill(null));
-  }, []);
+  }, [urls.length]);
 
   const handleInputChange = (index: number, value: string) => {
     const newUrls = [...urls];
