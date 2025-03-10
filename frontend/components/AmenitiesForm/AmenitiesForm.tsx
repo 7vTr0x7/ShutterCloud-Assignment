@@ -1,21 +1,20 @@
 "use client";
 
-import Navbar from "../Navbar";
-import { z } from "zod";
-import { useState, useEffect } from "react";
-import { toast, Toaster } from "react-hot-toast";
-import { CiCirclePlus } from "react-icons/ci";
 import amenitiesData from "@/app/constants/amenities";
+import { useEffect, useState } from "react";
+import { toast, Toaster } from "react-hot-toast";
+import { z } from "zod";
+import Navbar from "../Navbar";
 
-import Amenities from "./Amenities";
 import ImagesSection from "../ImagesSection/ImagesSection";
 import UrlInput from "../Inputs/UrlInput";
 import LandmarkForm from "../LandmarkForm/LandmarkForm";
+import Amenities from "./Amenities";
 
-import { IImage } from "@/app/types/image";
 import { Amenity } from "@/app/types/amenity";
-import ProgressBar from "../ProgressBar/ProgressBar";
+import { IImage } from "@/app/types/image";
 import ReraInput from "../Inputs/ReraInput";
+import ProgressBar from "../ProgressBar/ProgressBar";
 
 const formSchema = z.object({
   amenities: z
@@ -192,11 +191,7 @@ export default function AmenitiesForm() {
           <ProgressBar progress={calculateProgress()} />
         </div>
 
-        <Amenities
-          setIsAmenitySelected={setIsAmenitySelected}
-          amenities={amenities}
-          setAmenities={setAmenities}
-        />
+        <Amenities amenities={amenities} setAmenities={setAmenities} />
         {errors["amenities"] && (
           <p className="text-red-500 text-sm mt-1">{errors["amenities"]}</p>
         )}

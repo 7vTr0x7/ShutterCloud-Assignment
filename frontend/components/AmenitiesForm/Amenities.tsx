@@ -1,24 +1,16 @@
-import amenitiesData from "@/app/constants/amenities";
 import { Amenity } from "@/app/types/amenity";
-import { CiCirclePlus, CiCircleMinus } from "react-icons/ci";
-import { GoCircle } from "react-icons/go";
+import { Dispatch, SetStateAction, useEffect } from "react";
+import { CiCircleMinus, CiCirclePlus } from "react-icons/ci";
 import { FaCircleCheck } from "react-icons/fa6";
-import { Dispatch, SetStateAction, useState, useEffect } from "react";
+import { GoCircle } from "react-icons/go";
 
 type AmenitiesProps = {
-  setIsAmenitySelected: Dispatch<SetStateAction<boolean>>;
   amenities: Amenity[];
   setAmenities: Dispatch<SetStateAction<Amenity[]>>;
 };
 
-export default function Amenities({
-  setIsAmenitySelected,
-  amenities,
-  setAmenities,
-}: AmenitiesProps) {
-  useEffect(() => {
-    setIsAmenitySelected(amenities.some((amenity) => amenity.selected));
-  }, [amenities, setIsAmenitySelected]);
+export default function Amenities({ amenities, setAmenities }: AmenitiesProps) {
+  useEffect(() => {}, [amenities]);
 
   const handleToggleSelection = (id: number) => {
     setAmenities((prevAmenities) =>

@@ -1,12 +1,12 @@
 "use client";
 
-import React, { useState } from "react";
-import dynamic from "next/dynamic";
+import { LatLngExpression } from "leaflet";
 import "leaflet/dist/leaflet.css";
+import dynamic from "next/dynamic";
+import React, { useState } from "react";
 import { IoClose } from "react-icons/io5";
 import { SlLocationPin } from "react-icons/sl";
-import { MapContainer, TileLayer, Marker, useMapEvents } from "react-leaflet";
-import { LatLngExpression } from "leaflet";
+import { useMapEvents } from "react-leaflet";
 
 // Dynamically import Leaflet components to prevent SSR errors
 const MapContainerDynamic = dynamic(
