@@ -64,9 +64,9 @@ const ImagesSection = () => {
               </div>
             ))}
           </div>
-          <p className="text-[#df4469] text-sm my-3">Add atleast one media</p>
         </>
       )}
+      <p className="text-[#df4469] text-sm my-3">Add atleast one media</p>
     </div>
   );
 };

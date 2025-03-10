@@ -5,6 +5,8 @@ import Navbar from "../Navbar";
 import Amenities from "./Amenities";
 import { useState } from "react";
 import ImagesSection from "../ImagesSection/ImagesSection";
+import UrlInput from "../Inputs/UrlInput";
+import ReraInput from "../Inputs/ReraInput";
 
 export default function AmenitiesForm() {
   const [isAmenitySelected, setIsAmenitySelected] = useState<boolean>(false);
@@ -22,6 +24,8 @@ export default function AmenitiesForm() {
         </div>
         <Amenities setIsAmenitySelected={setIsAmenitySelected} />
         <ImagesSection />
+        <UrlInput />
+        <ReraInput />
       </div>
     </>
   );
