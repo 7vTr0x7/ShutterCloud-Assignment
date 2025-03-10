@@ -16,7 +16,7 @@ const ImagesSection = ({ images, setImages }: ImagesSectionProps) => {
       file,
       url: URL.createObjectURL(file),
       description: "",
-      isPrimary: images.length === 0,
+      isPrimary: false,
     }));
 
     setImages((prev) => [...prev, ...newImages]);
