@@ -1,4 +1,4 @@
-import AmenitiesForm from "@/components/AmenitiesForm";
+import AmenitiesForm from "@/components/AmenitiesForm/AmenitiesForm";
 import Sidebar from "@/components/Sidebar";
 
 export default function Home() {

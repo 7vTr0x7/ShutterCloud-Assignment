@@ -1,9 +1,10 @@
 "use client";
 
-import Navbar from "./Navbar";
+import Navbar from "../Navbar";
 
 import Amenities from "./Amenities";
 import { useState } from "react";
+import ImagesSection from "../ImagesSection/ImagesSection";
 
 export default function AmenitiesForm() {
   const [isAmenitySelected, setIsAmenitySelected] = useState<boolean>(false);
@@ -20,6 +21,7 @@ export default function AmenitiesForm() {
           <div className="px-5 py-10"></div>
         </div>
         <Amenities setIsAmenitySelected={setIsAmenitySelected} />
+        <ImagesSection />
       </div>
     </>
   );

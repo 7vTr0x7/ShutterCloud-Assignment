@@ -42,7 +42,7 @@ export default function Amenities({ setIsAmenitySelected }: AmenitiesProps) {
 
   return (
     <>
-      <div className="flex justify-between items-center py-5 ">
+      <div className="flex justify-between items-center py-5 border-b border-b-gray-200">
         <h1 className="font-bold text-xl">Amenities</h1>
         <button
           className="flex items-center gap-2 px-2 py-1 text-black border border-green-300 rounded-md"
